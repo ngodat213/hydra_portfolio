@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:hydra_profolio/utils/responsive_layout.dart';
 import '../models/blog_post.dart';
-import '../theme/app_theme.dart';
 import '../utils/size_utils.dart';
-import '../widgets/table_of_contents.dart';
+import '../utils/responsive_layout.dart';
+import '../utils/blog_detail_utils.dart';
 
 class BlogDetailScreen extends StatelessWidget {
   final BlogPost post;
@@ -19,258 +17,214 @@ class BlogDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ResponsiveWidget(
-        mobile: _buildMobileContent(),
-        desktop: _buildDesktopContent(),
-      ),
-    );
-  }
-
-  Widget _buildMobileContent() {
-    return SingleChildScrollView(
-      controller: _scrollController,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          _buildContent(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDesktopContent() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                _buildContent(),
-              ],
-            ),
-          ),
-        ),
-        TableOfContents(
-          content: post.content,
-          onHeadingTap: (heading) => _scrollToHeading(heading),
-        ),
-      ],
-    );
-  }
-
-  void _scrollToHeading(String heading) {
-    // Implement scroll logic here
-    // You might need to use GlobalKey or other methods to find heading position
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      height: 400,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(post.imagePath),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.black.withOpacity(0.7),
-            ],
-          ),
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeUtils.safeBlockHorizontal * 15,
-          vertical: 40,
-        ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(
-                  post.readTime,
-                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    post.type,
-                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              post.title,
-              style: AppTheme.lightTheme.textTheme.displayMedium?.copyWith(
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              post.description,
-              style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                color: Colors.white70,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                const CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage('assets/images/avatar.jpg'),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      post.author,
-                      style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      post.publishDate.toString().split(' ')[0],
-                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            _buildHeader(),
+            _buildContent(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildHeader() {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: SizeUtils.safeBlockHorizontal * 15,
-        vertical: 40,
+        vertical: SizeUtils.safeBlockVertical * 5,
+      ),
+      child: Column(
+        children: [
+          // Featured Image
+          // Image.asset(post.metadata.imagePath),
+
+          // Content
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: BlogDetailUtils.headerPaddingVertical,
+                ),
+                child: Text(
+                  post.metadata.type,
+                  style: BlogDetailUtils.metaStyle,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                post.metadata.title,
+                style: BlogDetailUtils.titleStyle,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 24,
+                    backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        post.metadata.author,
+                        style: BlogDetailUtils.authorStyle,
+                      ),
+                      Text(
+                        '${BlogDetailUtils.formatDate(post.metadata.publishDate)} • ${post.metadata.readTime}',
+                        style: BlogDetailUtils.dateStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveLayout.isDesktop(context)
+            ? SizeUtils.safeBlockHorizontal * 15
+            : 24,
+        vertical: 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Tags
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: post.tags.map((tag) {
+            children: post.metadata.tags.map((tag) {
               return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                padding: BlogDetailUtils.tagPadding,
+                decoration: BlogDetailUtils.tagDecoration,
                 child: Text(
                   '#$tag',
-                  style: AppTheme.lightTheme.textTheme.bodySmall,
+                  style: BlogDetailUtils.metaStyle,
                 ),
               );
             }).toList(),
           ),
-          const SizedBox(height: 32),
-          MarkdownBody(
-            data: post.content,
-            styleSheet: MarkdownStyleSheet(
-              h1: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                height: 1.4,
-              ),
-              h2: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                height: 1.4,
-              ),
-              h3: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                height: 1.4,
-              ),
-              p: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 16,
-                height: 1.8,
-                color: Color(0xFF2C3E50),
-              ),
-              listBullet: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 16,
-                height: 1.8,
-                color: Color(0xFF2C3E50),
-              ),
-              code: const TextStyle(
-                fontFamily: 'RobotoMono',
-                fontSize: 14,
-                height: 1.5,
-                backgroundColor: Color(0xFFF5F6F7),
-              ),
-              codeblockDecoration: BoxDecoration(
-                color: const Color(0xFFF5F6F7),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              blockquote: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 16,
-                height: 1.8,
-                color: Color(0xFF546E7A),
-                fontStyle: FontStyle.italic,
-              ),
-              blockquoteDecoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: Colors.grey[300]!,
-                    width: 4,
-                  ),
-                ),
-              ),
-              tableCellsPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              tableColumnWidth: const FlexColumnWidth(),
-              tableBody: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 14,
-                height: 1.5,
-              ),
-            ),
+          const SizedBox(height: 40),
+
+          // Description
+          Text(
+            post.content.description,
+            style: BlogDetailUtils.paragraphStyle,
           ),
+          const SizedBox(height: 40),
+
+          // Content Sections
+          ...post.content.sections.map((section) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (section.h1 != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: BlogDetailUtils.paragraphSpacing,
+                    ),
+                    child: Text(
+                      section.h1!,
+                      style: BlogDetailUtils.h1Style,
+                    ),
+                  ),
+                if (section.h2 != null)
+                  Text(
+                    section.h2!,
+                    style: BlogDetailUtils.h2Style,
+                  ),
+                if (section.h3 != null)
+                  Text(
+                    section.h3!,
+                    style: BlogDetailUtils.h3Style,
+                  ),
+                if (section.p != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16, bottom: 24),
+                    child: Text(
+                      section.p!,
+                      style: BlogDetailUtils.paragraphStyle,
+                    ),
+                  ),
+                if (section.list != null)
+                  ...section.list!.map((item) => Padding(
+                        padding: BlogDetailUtils.listItemPadding,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              width: BlogDetailUtils.bulletSize,
+                              height: BlogDetailUtils.bulletSize,
+                              decoration: const BoxDecoration(
+                                color: Colors.black,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(
+                                width: BlogDetailUtils.bulletSpacing),
+                            Expanded(
+                              child: Text(
+                                item,
+                                style: BlogDetailUtils.paragraphStyle,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                if (section.code != null)
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: BlogDetailUtils.paragraphSpacing,
+                    ),
+                    decoration: BlogDetailUtils.codeBlockDecoration,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (section.code!.title != null)
+                          Container(
+                            padding: BlogDetailUtils.codeBlockPadding,
+                            decoration: BlogDetailUtils.codeTitleDecoration,
+                            child: Text(
+                              section.code!.title!,
+                              style: BlogDetailUtils.codeTitleStyle,
+                            ),
+                          ),
+                        Container(
+                          padding: BlogDetailUtils.codeBlockPadding,
+                          child: SelectableText(
+                            section.code!.content,
+                            style: BlogDetailUtils.codeStyle,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (section.blockquote != null)
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: BlogDetailUtils.paragraphSpacing),
+                    padding: const EdgeInsets.fromLTRB(24, 16, 16, 16),
+                    decoration: BlogDetailUtils.blockquoteDecoration,
+                    child: Text(
+                      section.blockquote!,
+                      style: BlogDetailUtils.blockquoteStyle,
+                    ),
+                  ),
+              ],
+            );
+          }),
         ],
       ),
     );

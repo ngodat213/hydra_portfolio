@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hydra_profolio/models/blog_post.dart';
 import 'package:hydra_profolio/screens/blog_screen.dart';
 import 'package:hydra_profolio/screens/contact_screen.dart';
-import 'screens/home_screen.dart';
-import 'screens/resume_screen.dart';
+import 'screens/home_screen/home_screen.dart';
+import 'screens/resume_screen/resume_screen.dart';
 import 'theme/app_theme.dart';
 import 'widgets/navbar.dart';
 import 'widgets/size_init.dart';
@@ -36,12 +36,14 @@ final _router = GoRouter(
       builder: (context, state, child) {
         return SizeInit(
           child: Scaffold(
+            backgroundColor: Colors.white,
             body: Column(
               children: [
                 NavBar(currentRoute: state.uri.path),
                 Expanded(child: child),
               ],
             ),
+            endDrawer: MobileDrawer(currentRoute: state.uri.path),
           ),
         );
       },

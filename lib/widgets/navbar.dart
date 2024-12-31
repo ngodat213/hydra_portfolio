@@ -2,6 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:hydra_profolio/utils/size_utils.dart';
 import '../utils/responsive_layout.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
+
+class TimeDisplay extends StatefulWidget {
+  const TimeDisplay({super.key});
+
+  @override
+  State<TimeDisplay> createState() => _TimeDisplayState();
+}
+
+class _TimeDisplayState extends State<TimeDisplay> {
+  late Timer _timer;
+  late TimeOfDay _currentTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentTime = TimeOfDay.now();
+    // Cập nhật thời gian mỗi phút
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      setState(() {
+        _currentTime = TimeOfDay.now();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _currentTime.format(context),
+      style: const TextStyle(fontSize: 12),
+    );
+  }
+}
 
 class NavBar extends StatelessWidget {
   final String currentRoute;
@@ -13,11 +52,11 @@ class NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = ResponsiveLayout.isDesktop(context);
+
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveLayout.isDesktop(context)
-            ? SizeUtils.safeBlockHorizontal * 15
-            : 20.0,
+        horizontal: isDesktop ? SizeUtils.safeBlockHorizontal * 15 : 20.0,
         vertical: 20.0,
       ),
       child: Row(
@@ -32,67 +71,39 @@ class NavBar extends StatelessWidget {
             ),
           ),
 
-          // Menu items
-          if (ResponsiveLayout.isDesktop(context))
+          // Menu items for desktop
+          if (isDesktop)
             Row(
               children: [
-                _buildNavItem(
-                  context,
-                  'Home',
-                  '/home',
-                  isActive: currentRoute == '/home',
-                ),
-                _buildNavItem(
-                  context,
-                  'Resume',
-                  '/resume',
-                  isActive: currentRoute == '/resume',
-                ),
-                _buildNavItem(
-                  context,
-                  'About me',
-                  '/about',
-                  isActive: currentRoute == '/about',
-                ),
-                _buildNavItem(
-                  context,
-                  'Blog',
-                  '/blog',
-                  isActive: currentRoute == '/blog',
-                ),
-                _buildNavItem(
-                  context,
-                  'Contact',
-                  '/contact',
-                  isActive: currentRoute == '/contact',
-                ),
+                _buildNavItem(context, 'Home', '/home',
+                    isActive: currentRoute == '/home'),
+                _buildNavItem(context, 'Resume', '/resume',
+                    isActive: currentRoute == '/resume'),
+                _buildNavItem(context, 'About me', '/about',
+                    isActive: currentRoute == '/about'),
+                _buildNavItem(context, 'Blog', '/blog',
+                    isActive: currentRoute == '/blog'),
+                _buildNavItem(context, 'Contact', '/contact',
+                    isActive: currentRoute == '/contact'),
               ],
             ),
 
           // Right section
           Row(
             children: [
-              if (ResponsiveLayout.isDesktop(context)) ...[
-                Column(
+              if (isDesktop) ...[
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Text(
-                      'Ho Chi Minh City, Vietnam',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ),
                     Text(
-                      TimeOfDay.now().format(context),
-                      style: const TextStyle(
-                        fontSize: 12,
-                      ),
+                      'Ho Chi Minh City, Vietnam',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
+                    TimeDisplay(),
                   ],
                 ),
+                const SizedBox(width: 10),
               ],
-              const SizedBox(width: 10),
               TextButton(
                 onPressed: () {},
                 style: TextButton.styleFrom(
@@ -101,6 +112,16 @@ class NavBar extends StatelessWidget {
                 ),
                 child: const Text('Download CV'),
               ),
+              // Hamburger menu for mobile
+              if (!isDesktop) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                ),
+              ],
             ],
           ),
         ],
@@ -131,21 +152,75 @@ class NavBar extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSlotButton(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
+// Thêm Drawer cho mobile menu
+class MobileDrawer extends StatelessWidget {
+  final String currentRoute;
+
+  const MobileDrawer({
+    super.key,
+    required this.currentRoute,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Colors.black),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  'Hydra Coder',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Ho Chi Minh City, Vietnam',
+                  style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          _buildDrawerItem(context, 'Home', '/home', currentRoute),
+          _buildDrawerItem(context, 'Resume', '/resume', currentRoute),
+          _buildDrawerItem(context, 'About me', '/about', currentRoute),
+          _buildDrawerItem(context, 'Blog', '/blog', currentRoute),
+          _buildDrawerItem(context, 'Contact', '/contact', currentRoute),
+        ],
       ),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(4),
+    );
+  }
+
+  Widget _buildDrawerItem(
+    BuildContext context,
+    String title,
+    String route,
+    String currentRoute,
+  ) {
+    final isActive = currentRoute == route;
+
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: isActive ? Colors.black : Colors.grey,
+          fontWeight: isActive ? FontWeight.w500 : FontWeight.normal,
+        ),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 12),
-      ),
+      onTap: () {
+        context.go(route);
+        Navigator.pop(context); // Close drawer
+      },
     );
   }
 }
