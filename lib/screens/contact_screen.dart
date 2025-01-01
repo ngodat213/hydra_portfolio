@@ -192,11 +192,11 @@ class _ContactScreenState extends State<ContactScreen> {
             ),
           ),
           const SizedBox(height: 32),
+          _buildSubmitButton(),
+          const SizedBox(height: 32),
           _buildContactInfo(),
           const SizedBox(height: 32),
           _buildSocialLinks(),
-          const SizedBox(height: 32),
-          _buildSubmitButton(),
         ],
       ),
     );

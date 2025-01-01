@@ -1,0 +1,409 @@
+{
+  "personal": {
+    "name": "Ngô Văn Tiến Đạt",
+    "title": "Fresher Flutter Developer",
+    "location": "Thu Duc City",
+    "image": "assets/images/avatar.jpg",
+    "email": "ngodat.it213@gmail.com",
+    "phone": "0399228357",
+    "social": [
+      {
+        "name": "hydracoder",
+        "url": "https://github.com/ngodat213",
+        "isActive": true,
+        "icon": "assets/icons/github.svg"
+      },
+      {
+        "name": "ngodat213",
+        "url": "https://www.facebook.com/ngodat213",
+        "isActive": false,
+        "icon": "assets/icons/facebook.svg"
+      },
+      {
+        "name": "hydracoder",
+        "url": "https://www.linkedin.com/in/hydracoder",
+        "isActive": false,
+        "icon": "assets/icons/linkedin.svg"
+      }
+    ]
+  },
+  "summary": "Hi, I'm Ngo Van Tien Dat, a third-year Information Technology student at Ho Chi Minh City University of Technology (HUTECH). My goal is to become a skilled Flutter developer, and I'm always eager to learn and take on challenges. I thrive in both collaborative teamwork and independent work environments. Please feel free to take a look at my resume whenever you have the chance.",
+  "education": [
+    {
+      "school": "Hutech University",
+      "degree": "Software Engineering",
+      "period": "Oct 2021 - present",
+      "summary": [
+        "Information technology at HUTECH University.",
+        "I have some basic certifications in programming and experience participating in programming competitions like the Olympics and participating in algorithm sites Codelearn.io. Besides, I have the ability to self-study, teamwork, and the ability to withstand work pressure."
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "company": "Di4l",
+      "role": "Internship Flutter Developer",
+      "period": "July 2024 - present",
+      "skills": [
+        "Flutter",
+        "Dart",
+        "Firebase",
+        "VietMap",
+        "GetX",
+        "MVVM",
+        "FCM",
+        "Firebase",
+        "Google Map",
+        "Provider"
+      ],
+      "summary": [
+        "Improving the UI & UX of Femicam's desktop application based on React Electron and Material UI",
+        "Designing and creating React components for the application dashboard"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Kiwis",
+      "skills": [
+        "Flutter",
+        "Dart",
+        "Firebase",
+        "VietMap",
+        "AWS",
+        "GetX",
+        "NodeJs",
+        "MySQL",
+        "Socket",
+        "FCM",
+        "Cloudinary"
+      ],
+      "summary": [
+        "Kiwis is a mobile application that allows users to find and book services in their area. It is built with Flutter and Dart, and uses Firebase for authentication, database, and cloud storage. The application also uses VietMap for map services and AWS for cloud storage."
+      ],
+      "details": [
+        {
+          "title": "Overview",
+          "items": [
+            "Kiwis is a comprehensive social networking and planning application that seamlessly combines social connectivity with practical lifestyle management. As the lead developer, I architected and implemented several innovative features that set this app apart:"
+          ]
+        },
+        {
+          "title": "Social Networking Core",
+          "items": [
+            "Real-time social feed with instant updates using Socket.IO and Firebase Cloud Messaging",
+            "Robust friend system with personalized connection recommendations",
+            "Group creation and management with role-based permissions",
+            "Real-time messaging system supporting text, images, and location sharing"
+          ]
+        },
+        {
+          "title": "Advanced Planning System",
+          "items": [
+            "Interactive plan creation with customizable templates and location integration",
+            "Smart expense tracking and splitting functionality for group activities",
+            "Real-time location sharing and navigation using VietMap SDK",
+            "Intelligent task management with location-based reminders and notifications"
+          ]
+        },
+        {
+          "title": "Safety & Emergency Features",
+          "items": [
+            "SOS system with instant location broadcasting to group members",
+            "Emergency contact integration with one-tap calling",
+            "Real-time location tracking for group members during active plans"
+          ]
+        },
+        {
+          "title": "Technical Achievements",
+          "items": [
+            "Implemented efficient real-time data synchronization using Socket.IO, reducing latency by 40%",
+            "Integrated VietMap SDK for precise location services with custom markers and routing",
+            "Designed a scalable backend architecture using Node.js and MySQL",
+            "Utilized AWS for reliable media storage and Cloudinary for optimized image delivery",
+            "Achieved 99.9% crash-free sessions through comprehensive error handling and testing"
+          ]
+        }
+      ],
+      "thumbnail": "assets/images/project1.png",
+      "link": "https://github.com/ngodat213/kiwis_flutter",
+      "features": [
+        {
+          "title": "Real-time Social Connectivity",
+          "description": "Users can share moments instantly, connect with friends, and engage in real-time conversations, creating a vibrant social ecosystem."
+        },
+        {
+          "title": "Smart Plan Management",
+          "description": "Create and manage detailed plans with location integration, expense tracking, and real-time updates for all participants."
+        },
+        {
+          "title": "Location Intelligence",
+          "description": "Seamless integration with VietMap for navigation, location sharing, and point-of-interest discovery during plan execution."
+        },
+        {
+          "title": "Safety First",
+          "description": "Advanced SOS features with instant location sharing and emergency contact integration ensure user safety during activities."
+        },
+        {
+          "title": "Group Dynamics",
+          "description": "Comprehensive group management with real-time messaging, shared plans, and collaborative expense tracking."
+        }
+      ],
+      "showOnHome": true,
+      "stats": {
+        "developmentTime": "3 Months",
+        "teamSize": "2 Members",
+        "platform": "Android",
+        "status": "Completed"
+      }
+    },
+    {
+      "name": "ECourse",
+      "skills": [
+        "Flutter",
+        "Dart",
+        "VietMap",
+        "GetX",
+        "NestJs",
+        "MongoDB",
+        "Cloudinary"
+      ],
+      "summary": [
+        "A modern e-learning platform built with Flutter and NestJS, providing comprehensive learning management features."
+      ],
+      "details": [
+        {
+          "title": "Overview",
+          "items": [
+            "ECourse is a full-featured e-learning platform that connects students with educational content through an intuitive mobile interface."
+          ]
+        },
+        {
+          "title": "Learning Features",
+          "items": [
+            "Interactive course content with video, text, and quiz support",
+            "Progress tracking and achievement system",
+            "Personalized learning paths",
+            "Real-time assessment and feedback"
+          ]
+        },
+        {
+          "title": "User Experience",
+          "items": [
+            "Intuitive course navigation and content organization",
+            "Offline content access capability",
+            "Cross-platform synchronization",
+            "Interactive discussion forums and peer learning"
+          ]
+        },
+        {
+          "title": "Technical Stack",
+          "items": [
+            "Flutter frontend with GetX state management",
+            "NestJS backend with MongoDB database",
+            "Cloudinary integration for media management",
+            "Real-time notification system",
+            "Secure authentication and authorization"
+          ]
+        }
+      ],
+      "link": "https://github.com/ngodat213/e_course_flutter",
+      "thumbnail": "assets/images/project2.png",
+      "showOnHome": true,
+      "stats": {
+        "developmentTime": "2 Months",
+        "teamSize": "1 Member",
+        "platform": "Android",
+        "status": "In Progress"
+      }
+    },
+    {
+      "name": "Pulse Music Streaming",
+      "skills": [
+        "Spring Boot",
+        "MySQL",
+        "Java",
+        "Thymeleaf",
+        "Bootstrap"
+      ],
+      "summary": [
+        "Web application for listening to music using Spring Boot security, thymeleaf",
+        "Designed MySQL database schema, Developed backend with Java Spring Boot, integrated frontend and backend",
+        "User authentication and authorization, Admin dashboard, CRUD operations, mailer, Server-side rendering with Thymeleaf, Cloudinary for media storage, OAuth2 for authentication."
+      ],
+      "details": [
+        {
+          "title": "Overview",
+          "items": [
+            "A comprehensive music streaming platform built with Spring Boot and Thymeleaf, offering a rich set of features for both users and administrators."
+          ]
+        },
+        {
+          "title": "Core Features",
+          "items": [
+            "User authentication and authorization system with OAuth2 integration",
+            "Advanced music player with playlist management",
+            "Artist and album management system",
+            "User profile customization and social features"
+          ]
+        },
+        {
+          "title": "Admin Dashboard",
+          "items": [
+            "Comprehensive admin panel for content management",
+            "User management and role-based access control",
+            "Analytics and reporting features",
+            "Content moderation tools"
+          ]
+        },
+        {
+          "title": "Technical Implementation",
+          "items": [
+            "Designed and implemented scalable MySQL database schema",
+            "Integrated Cloudinary for efficient media storage and delivery",
+            "Implemented server-side rendering using Thymeleaf",
+            "Built robust CRUD operations with Spring Boot",
+            "Integrated email notification system"
+          ]
+        }
+      ],
+      "link": "https://github.com/ngodat213/pulse_music_sb",
+      "thumbnail": "assets/images/project3.png",
+      "showOnHome": true,
+      "stats": {
+        "developmentTime": "2 Months",
+        "teamSize": "1 Member",
+        "platform": "Web",
+        "status": "Completed"
+      }
+    },
+    {
+      "name": "ECourse Backend",
+      "skills": [
+        "NestJs",
+        "MongoDB",
+        "TypeScript",
+        "Bootstrap"
+      ],
+      "summary": [
+        "Backend infrastructure for the ECourse platform, built with NestJS and MongoDB."
+      ],
+      "details": [
+        {
+          "title": "Overview",
+          "items": [
+            "A robust backend system powering the ECourse platform, providing scalable and secure API services."
+          ]
+        },
+        {
+          "title": "API Features",
+          "items": [
+            "RESTful API design with comprehensive documentation",
+            "Real-time data synchronization",
+            "Secure user authentication and authorization",
+            "File upload and management system"
+          ]
+        },
+        {
+          "title": "Database Design",
+          "items": [
+            "Optimized MongoDB schema design",
+            "Efficient data querying and aggregation",
+            "Data validation and sanitization",
+            "Automated backup and recovery systems"
+          ]
+        },
+        {
+          "title": "Technical Implementation",
+          "items": [
+            "NestJS modules and services architecture",
+            "JWT-based authentication system",
+            "Role-based access control",
+            "Integration with third-party services",
+            "Comprehensive error handling and logging"
+          ]
+        }
+      ],
+      "link": "https://github.com/ngodat213/e-course-nestjs",
+      "thumbnail": "assets/images/project3.png",
+      "showOnHome": false,
+      "stats": {
+        "developmentTime": "1 Month",
+        "teamSize": "1 Member",
+        "platform": "Web",
+        "status": "In Progress"
+      }
+    }
+  ],
+  "skills": {
+    "Languages": [
+      "Java",
+      "Dart",
+      "TypeScript",
+      "JavaScript",
+      "SQL",
+      "C#",
+      "C/C++"
+    ],
+    "Technologies": [
+      "Flutter",
+      "Firebase",
+      "AWS",
+      "NodeJs",
+      "MySQL",
+      "Socket",
+      "FCM",
+      "Cloudinary",
+      "NestJs",
+      "ASP.NET"
+    ],
+    "Tools & Softwares": [
+      "VS Code",
+      "Cursor",
+      "Git",
+      "Intellij",
+      "Figma",
+      "Postman",
+      "Photoshop"
+    ]
+  },
+  "certifications": [
+    
+    {
+      "name": "JavaScript Essentials 2",
+      "issuer": "Cisco",
+      "date": "Nov 2024",
+      "description": "Advanced algorithms and data structures certification with practical problem-solving",
+      "link": "https://www.credly.com/badges/a98838c4-c7ef-4dc4-9d96-616896b2a653/public_url"
+    },
+    {
+      "name": "JavaScript Essentials 1",
+      "issuer": "Cisco",
+      "date": "Nov 2024",
+      "description": "Fundamental understanding of JavaScript",
+      "link": "https://www.credly.com/badges/7eaebd5a-48ef-4d52-9cff-0898b717e5a4/public_url"
+    },
+    
+    {
+      "name": "Networking Basics",
+      "issuer": "Cisco",
+      "date": "Nov 2024",
+      "description": "Fundamental understanding of Networking",
+      "link": "https://www.credly.com/badges/d8f48776-5fcb-43fc-ac9a-8fdb21a99dd0/public_url"
+    },
+    {
+      "name": "Data Visualization with R",
+      "issuer": "IBM",
+      "date": "Dec 2023",
+      "description": "Fundamental understanding of Data Visualization with R",
+      "link": "https://www.credly.com/badges/25fc16d9-3453-4a1f-b10a-b3b2cf13a798/public_url"
+    },
+    {
+      "name": "R Essentials",
+      "issuer": "IBM",
+      "date": "Dec 2023",
+      "description": "Fundamental understanding of R",
+      "link": "https://www.credly.com/badges/c14acecb-03e9-4dfc-9a6b-a80578c0c92c/public_url"
+    }
+  ]
+}

@@ -1,279 +1,202 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hydra_profolio/models/resume.dart';
 import 'package:hydra_profolio/theme/app_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ResumeMobileContent extends StatelessWidget {
-  const ResumeMobileContent({super.key});
+  final Resume resume;
+  const ResumeMobileContent({super.key, required this.resume});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 32,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              const CircleAvatar(
-                radius: 70,
-                backgroundImage: AssetImage('assets/images/avatar.jpg'),
-              ),
-              Text(
-                'Ngô Văn Tiến Đạt',
-                style: AppTheme.lightTheme.textTheme.displayMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Fresher Flutter Developer',
-                style: AppTheme.lightTheme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
+    return SingleChildScrollView(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 32,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                CircleAvatar(
+                  radius: 70,
+                  backgroundImage: AssetImage(resume.personal.image),
+                ),
+                Text(
+                  resume.personal.name,
+                  style: AppTheme.lightTheme.textTheme.displayMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  resume.personal.title,
+                  style: AppTheme.lightTheme.textTheme.titleLarge,
+                ),
+                const SizedBox(height: 16),
 
-              // Contact info and social links
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.location_on_outlined, size: 16),
-                  const SizedBox(width: 8),
-                  const Text('District 9'),
-                  const SizedBox(width: 24),
-                  const Icon(Icons.mail_outline, size: 16),
-                  const SizedBox(width: 8),
-                  Text(
-                    'ngodat213@gmail.com',
-                    style: GoogleFonts.spaceGrotesk(
-                      decoration: TextDecoration.underline,
+                // Contact info and social links
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.location_on_outlined, size: 16),
+                    const SizedBox(width: 8),
+                    Text(resume.personal.location),
+                    const SizedBox(width: 24),
+                    const Icon(Icons.mail_outline, size: 16),
+                    const SizedBox(width: 8),
+                    Text(
+                      resume.personal.email,
+                      style: GoogleFonts.spaceGrotesk(
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildSocialLink('hydra.coder', true),
-                  _buildSocialLink('hydracoder', false),
-                  _buildSocialLink('ngodat213', false),
-                ],
-              ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.phone, size: 16),
+                    const SizedBox(width: 8),
+                    Text(
+                      resume.personal.phone,
+                      style: GoogleFonts.spaceGrotesk(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: resume.personal.social
+                      .map((social) => _buildSocialLink(social))
+                      .toList(),
+                ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // Education Section
-              _buildSection(
-                'Sumary',
-                [
-                  _buildSummaryItem(
-                    'Hi, I\'m Ngo Van Tien Dat, a third-year Information Technology student at Ho Chi Minh City University of Technology (HUTECH). My goal is to become a skilled Flutter developer, and I\'m always eager to learn and take on challenges. I thrive in both collaborative teamwork and independent work environments. Please feel free to take a look at my resume whenever you have the chance.',
-                  ),
-                ],
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              const SizedBox(height: 16),
-              _buildSection(
-                'Education',
-                [
-                  _buildTimelineItem(
-                    'Hutech University',
-                    'Software Engineering',
-                    'Oct 2021 - present',
-                    details: [
-                      'Information technology at HUTECH University.',
-                      'I have some basic certifications in programming and experience participating in programming competitions like the Olympics and participating in algorithm sites Codelearn.io. Besides, I have the ability to self-study, teamwork, and the ability to withstand work pressure.',
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-          // Header with name and title
-          const Divider(
-            color: Colors.grey,
-            thickness: 1,
-          ),
-          const SizedBox(height: 16),
+                // Education Section
+                _buildSection(
+                  'Sumary',
+                  [
+                    _buildSummaryItem(resume.summary),
+                  ],
+                ),
+                const Divider(
+                  color: Colors.grey,
+                  thickness: 1,
+                ),
+                const SizedBox(height: 16),
+                _buildSection(
+                  'Education',
+                  resume.education
+                      .map((edu) => _buildTimelineItem(
+                            title: edu.school,
+                            subtitle: edu.degree,
+                            period: edu.period,
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+            // Header with name and title
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            const SizedBox(height: 16),
 
-          // Experience Section
-          _buildSection(
-            'Experience',
-            [
-              _buildTimelineItem(
-                'Di4l',
-                'Internship Flutter Developer',
-                'July 2024 - present',
-                skills: [
-                  'Flutter',
-                  'Dart',
-                  'Firebase',
-                  'VietMap',
-                  'GetX',
-                  'MVVM',
-                  'FCM',
-                  'Firebase',
-                  'Google Map',
-                  'Provider',
-                ],
-                details: [
-                  'Improving the UI & UX of Femicam\'s desktop application based on React Electron and Material UI',
-                  'Designing and creating React components for the application dashboard',
-                ],
-              ),
-            ],
-          ),
-          const Divider(
-            color: Colors.grey,
-            thickness: 1,
-          ),
-          const SizedBox(height: 16),
+            // Experience Section
+            _buildSection(
+              'Experience',
+              resume.experience
+                  .map((exp) => _buildTimelineItem(
+                        title: exp.company,
+                        subtitle: exp.role,
+                        period: exp.period,
+                        skills: exp.skills,
+                      ))
+                  .toList(),
+            ),
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            const SizedBox(height: 16),
 
-          // Featured Project Section
-          _buildSection(
-            'My Projects',
-            [
-              _buildTimelineItem(
-                'Kiwis',
-                '',
-                '',
-                skills: [
-                  'Flutter',
-                  'Dart',
-                  'Firebase',
-                  'VietMap',
-                  'AWS',
-                  'GetX',
-                  'NodeJs',
-                  'MySQL',
-                  'Socket',
-                  'FCM',
-                  'Cloudinary'
-                ],
-                details: [
-                  'Kiwis is a mobile application that allows users to find and book services in their area. It is built with Flutter and Dart, and uses Firebase for authentication, database, and cloud storage. The application also uses VietMap for map services and AWS for cloud storage.',
-                ],
-                link: 'https://github.com/ngodat213/kiwis',
-              ),
-              _buildTimelineItem(
-                'Pulse Music Streaming',
-                '',
-                '',
-                skills: [
-                  'Spring Boot',
-                  'MySQL',
-                  'Java',
-                  'Thymeleaf',
-                  'Bootstrap',
-                ],
-                details: [
-                  'Web application for listening to music using Spring Boot security, thymeleaf',
-                  'Designed MySQL database schema, Developed backend with Java Spring Boot, integrated frontend and backend',
-                  'User authentication and authorization, Admin dashboard, CRUD operations, mailer, Server-side rendering with Thymeleaf, Cloudinary for media storage, OAuth2 for authentication.',
-                ],
-                link: ' https://github.com/ngodat213/pulse_music_sb',
-              ),
-              _buildTimelineItem(
-                'ECourse',
-                '',
-                '',
-                skills: [
-                  'Flutter',
-                  'Dart',
-                  'VietMap',
-                  'GetX',
-                  'NestJs',
-                  'MongoDB',
-                  'Cloudinary'
-                ],
-                details: [
-                  'Kiwis is a mobile application that allows users to find and book services in their area. It is built with Flutter and Dart, and uses Firebase for authentication, database, and cloud storage. The application also uses VietMap for map services and AWS for cloud storage.',
-                ],
-                link: 'https://github.com/ngodat213/ecourse_flutter',
-              ),
-              _buildTimelineItem(
-                'ECourse Backend',
-                '',
-                '',
-                skills: [
-                  'NestJs',
-                  'MongoDB',
-                  'TypeScript',
-                  'Bootstrap',
-                ],
-                details: [
-                  'Web application for listening to music using Spring Boot security, thymeleaf',
-                  'Designed MySQL database schema, Developed backend with Java Spring Boot, integrated frontend and backend',
-                  'User authentication and authorization, Admin dashboard, CRUD operations, mailer, Server-side rendering with Thymeleaf, Cloudinary for media storage, OAuth2 for authentication.',
-                ],
-                link: ' https://github.com/ngodat213/ecourse_nestjs',
-              ),
-            ],
-          ),
-          const Divider(
-            color: Colors.grey,
-            thickness: 1,
-          ),
-          const SizedBox(height: 16),
+            // Featured Project Section
+            _buildSection(
+              'My Projects',
+              resume.projects
+                  .map((project) => _buildTimelineItem(
+                        title: project.name,
+                        subtitle: '',
+                        period: '',
+                        skills: project.skills,
+                        summary: project.summary,
+                        details: project.details,
+                        link: project.link,
+                      ))
+                  .toList(),
+            ),
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            const SizedBox(height: 16),
 
-          // Skills Section
-          Text(
-            'Skills & Tools',
-            style: AppTheme.lightTheme.textTheme.titleLarge,
-          ),
-          const SizedBox(width: 16),
-          _buildSkillsSection('Languages', [
-            'Java',
-            'Dart',
-            'TypeScript',
-            'JavaScript',
-            'SQL',
-            'C#',
-            'C/C++',
-          ]),
-          _buildSkillsSection('Technologies', [
-            'Flutter',
-            'Firebase',
-            'AWS',
-            'NodeJs',
-            'MySQL',
-            'Socket',
-            'FCM',
-            'Cloudinary',
-            'NestJs',
-            'ASP.NET',
-          ]),
-          _buildSkillsSection('Tools & Softwares', [
-            'VS Code',
-            'Cursor',
-            'Git',
-            'Intellij',
-            'Figma',
-            'Postman',
-            'Photoshop',
-          ]),
-        ],
+            // Skills Section
+            Text(
+              'Skills & Tools',
+              style: AppTheme.lightTheme.textTheme.titleLarge,
+            ),
+            const SizedBox(width: 16),
+            ...resume.skills.entries
+                .map((entry) => _buildSkillsSection(entry.key, entry.value)),
+
+            const Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            const SizedBox(height: 16),
+
+            // Certifications Section
+            _buildSection(
+              'Certifications',
+              resume.certifications
+                  .map((cert) => _buildCertificationItem(cert))
+                  .toList(),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSocialLink(String text, bool isActive) {
+  Widget _buildSocialLink(Social social) {
     return Container(
       margin: const EdgeInsets.only(right: 16),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: isActive ? Colors.black : Colors.grey[100],
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: isActive ? Colors.white : Colors.black,
-          fontSize: 12,
-        ),
+      child: Row(
+        children: [
+          SvgPicture.asset(social.icon, width: 16, height: 16),
+          const SizedBox(width: 8),
+          InkWell(
+            onTap: () async {
+              if (await canLaunchUrl(Uri.parse(social.url))) {
+                await launchUrl(Uri.parse(social.url));
+              }
+            },
+            child: Text(
+              social.name,
+              style: const TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -303,12 +226,13 @@ class ResumeMobileContent extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineItem(
-    String title,
-    String subtitle,
-    String period, {
+  Widget _buildTimelineItem({
+    required String title,
+    required String subtitle,
+    required String period,
     List<String>? skills,
-    List<String>? details,
+    List<String>? summary,
+    List<ProjectSection>? details,
     String? link,
   }) {
     return Column(
@@ -362,9 +286,9 @@ class ResumeMobileContent extends StatelessWidget {
                 .toList(),
           ),
         ],
-        if (details != null) ...[
+        if (summary != null) ...[
           const SizedBox(height: 12),
-          ...details.map((entry) => Container(
+          ...summary.map((entry) => Container(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,11 +317,17 @@ class ResumeMobileContent extends StatelessWidget {
                   child: Container(width: 5, height: 5, color: Colors.grey),
                 ),
                 const SizedBox(width: 8),
-                SizedBox(
+                InkWell(
+                  onTap: () async {
+                    if (await canLaunchUrl(Uri.parse(link))) {
+                      await launchUrl(Uri.parse(link));
+                    }
+                  },
                   child: Text(
                     link,
-                    style: AppTheme.lightTheme.textTheme.bodyMedium
-                        ?.copyWith(decoration: TextDecoration.underline),
+                    style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
               ],
@@ -439,6 +369,64 @@ class ResumeMobileContent extends StatelessWidget {
                     ))
                 .toList(),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCertificationItem(Certification cert) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    cert.name,
+                    style: AppTheme.lightTheme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.verified, color: Colors.blue, size: 16),
+                ],
+              ),
+              Text(
+                cert.date,
+                style: AppTheme.lightTheme.textTheme.bodySmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            cert.issuer,
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            cert.description,
+            style: AppTheme.lightTheme.textTheme.bodyMedium,
+          ),
+          if (cert.link.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: () async {
+                if (await canLaunchUrl(Uri.parse(cert.link))) {
+                  await launchUrl(Uri.parse(cert.link));
+                }
+              },
+              child: Text(
+                'View Certificate',
+                style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

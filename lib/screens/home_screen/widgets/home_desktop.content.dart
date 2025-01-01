@@ -3,17 +3,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hydra_profolio/theme/app_theme.dart';
 import 'package:hydra_profolio/utils/size_utils.dart';
 import 'package:hydra_profolio/widgets/footer.dart';
+import 'package:hydra_profolio/models/resume.dart';
+import 'package:hydra_profolio/widgets/project_detail_dialog.dart';
 
 class HomeDesktopContent extends StatelessWidget {
-  const HomeDesktopContent({super.key});
+  final Resume resume;
+
+  const HomeDesktopContent({
+    super.key,
+    required this.resume,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Lọc các project có showOnHome = true
+    final featuredProjects =
+        resume.projects.where((p) => p.showOnHome).toList();
+
     return SingleChildScrollView(
       child: Column(
         children: [
           _introductDesktopContent(),
-          _featureWorksContent(),
+          _featureWorksContent(context),
           _toolContent(),
           const Footer(),
         ],
@@ -21,7 +32,13 @@ class HomeDesktopContent extends StatelessWidget {
     );
   }
 
-  Container _featureWorksContent() {
+  Container _featureWorksContent(
+    BuildContext context,
+  ) {
+    // Lọc các project có showOnHome = true
+    final featuredProjects =
+        resume.projects.where((p) => p.showOnHome).toList();
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: SizeUtils.safeBlockHorizontal * 15,
@@ -31,36 +48,19 @@ class HomeDesktopContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Featured Works',
+            'Projects',
             style: AppTheme.lightTheme.textTheme.displayLarge,
           ),
           const SizedBox(height: 24),
-          _buildFeaturedWorkCard(
-            category: 'Mobile App, Flutter',
-            title: 'Kiwis',
-            description:
-                'A dynamic social app enabling real-time messaging and seamless trip planning. Stay connected with friends, organize adventures effortlessly, and make every journey memorable.',
-            imagePath: 'assets/images/project1.png',
-            showButton: true,
-          ),
-          const SizedBox(height: 40),
-          _buildFeaturedWorkCard(
-            category: 'Mobile App, Flutter',
-            title: 'ECourse',
-            description:
-                'A course app that allows users to learn, practice programming languages and take exams.',
-            imagePath: 'assets/images/project2.png',
-            showButton: true,
-          ),
-          const SizedBox(height: 40),
-          _buildFeaturedWorkCard(
-            category: 'Web App, Spring Boot',
-            title: 'Pulse Music',
-            description:
-                'A music streaming platform that allows users to stream music and create playlists.',
-            imagePath: 'assets/images/project3.png',
-            showButton: true,
-          ),
+          ...featuredProjects.map((project) => Column(
+                children: [
+                  _buildFeaturedWorkCard(
+                    project: project,
+                    context: context,
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              )),
         ],
       ),
     );
@@ -195,110 +195,105 @@ class HomeDesktopContent extends StatelessWidget {
   }
 
   Widget _buildFeaturedWorkCard({
-    required String category,
-    required String title,
-    required String description,
-    String? imagePath,
-    bool? showButton,
+    required Project project,
+    required BuildContext context,
   }) {
-    return Container(
-      width: double.infinity,
-      height: 400,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Stack(
-          children: [
-            // Background Image
-            Positioned(
-              right: 0,
-              bottom: 10,
-              child: imagePath != null
-                  ? Image.asset(
-                      width: SizeUtils.screenWidth * 0.4,
-                      imagePath,
-                      fit: BoxFit.cover,
-                    )
-                  : const SizedBox(),
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => ProjectDetailDialog(project: project),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        height: 400,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            // Content Overlay
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.grey.withOpacity(0.1),
-                      Colors.black.withOpacity(0.1),
-                    ],
-                  ),
-                ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
                 padding: const EdgeInsets.all(40),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      category,
+                      project.skills
+                          .take(2)
+                          .join(', '), // Hiển thị 2 skill đầu tiên
                       style: GoogleFonts.spaceGrotesk(
-                        color: Colors.black,
-                        fontSize: 16,
+                        fontSize: 14,
+                        color: Colors.grey[600],
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 16),
                     Text(
-                      title,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 48,
+                      project.name,
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: SizeUtils.safeBlockHorizontal * 30,
-                      child: Text(
-                        description,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          height: 1.5,
-                        ),
+                    Text(
+                      project.summary.first, // Lấy dòng đầu tiên của summary
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 16,
+                        height: 1.5,
                       ),
                     ),
                     const SizedBox(height: 24),
-                    if (showButton == true)
-                      TextButton.icon(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                          backgroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 16,
-                          ),
+                    TextButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) =>
+                              ProjectDetailDialog(project: project),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0),
                         ),
-                        icon: const Text('View case study',
-                            style: TextStyle(
-                              color: Colors.white,
-                            )),
-                        label: const Icon(Icons.arrow_forward,
-                            color: Colors.white),
+                        backgroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
                       ),
+                      icon: const Text(
+                        'View case study',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      label: const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.horizontal(
+                  right: Radius.circular(8),
+                ),
+                child: Image.asset(
+                  project.thumbnail,
+                  fit: BoxFit.cover,
+                  height: double.infinity,
                 ),
               ),
             ),
